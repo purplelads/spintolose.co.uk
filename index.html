@@ -1,18 +1,19 @@
 <html>
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <title>SPIN TO LOSE</title>
     <style>
         body {
             background: #20262E;
             padding: 20px;
-            font-family: Helvetica;
+            font-family: 'Montserrat', Helvetica, sans-serif;
         }
 
         #app {
             margin: auto;
             background: #fff;
             border-radius: 4px;
-            padding: 20px;
+            padding: 20px 20px 20px 40px;
             transition: all 0.2s;
             width: 820px;
         }
@@ -50,6 +51,14 @@
             padding: 8px 16px;
             vertical-align: middle;
             border: none;
+            border-radius: 3px;
+            font-family: 'Montserrat', Helvetica, sans-serif;
+            font-size: 1rem;
+        }
+
+        #spin-button:hover {
+          cursor: pointer;
+          background-color: #4b9c4e;
         }
 
     </style>
@@ -94,7 +103,7 @@
         computed: {
             arc: function() { return Math.PI / (this.options.length / 2) }
         },
-        template: '<div><canvas width="500" height="500"></canvas><input id="spin-button" type="button" value="SPIN" v-on:click="spin()" /></div>',
+        template: '<div><canvas width="500" height="500"></canvas><input id="spin-button" type="button" value="Spin" v-on:click="spin()" /></div>',
         watch: {
             options: function(oldVal, newVal){
                 this.drawWheel();
@@ -114,7 +123,7 @@
                 ctx.strokeStyle = "black";
                 ctx.lineWidth = 2;
 
-                ctx.font = 'bold 12px Helvetica, Arial';
+                ctx.font = "bold 14px 'Montserrat', Helvetica" // 'bold 12px Helvetica, Arial';
 
                 for(var i = 0; i < this.options.length; i++) {
                 var angle = this.startAngle + i * this.arc;
@@ -128,10 +137,6 @@
                 ctx.fill();
 
                 ctx.save();
-                ctx.shadowOffsetX = -1;
-                ctx.shadowOffsetY = -1;
-                ctx.shadowBlur    = 0;
-                ctx.shadowColor   = "rgb(220,220,220)";
                 ctx.fillStyle = "black";
                 ctx.translate(250 + Math.cos(angle + this.arc / 2) * textRadius, 
                                 250 + Math.sin(angle + this.arc / 2) * textRadius);
@@ -181,7 +186,7 @@
             var arcd = this.arc * 180 / Math.PI;
             var index = Math.floor((360 - degrees % 360) / arcd);
             ctx.save();
-            ctx.font = 'bold 30px Helvetica, Arial';
+            ctx.font = "bold 30px 'Montserrat', Helvetica";
             var text = this.options[index];
             ctx.fillText(text, 250 - ctx.measureText(text).width / 2, 250 + 10);
             ctx.restore();
