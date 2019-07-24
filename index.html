@@ -9,14 +9,21 @@
         }
 
         #app {
+            margin: auto;
             background: #fff;
             border-radius: 4px;
             padding: 20px;
             transition: all 0.2s;
+            width: 820px;
+        }
+
+        ol {
+            padding-inline-start: 0;
         }
 
         li {
             margin: 8px 0;
+            list-style-type: none;
         }
 
         h2 {
@@ -27,21 +34,45 @@
         del {
             color: rgba(0, 0, 0, 0.3);
         }
+
+        #who {
+            width: 240px;
+            vertical-align: top;
+        }
+
+        #who, #roulette-wheel {
+            display: inline-block;
+        }
+
+        #spin-button {
+            color: #FFFFFF;
+            background-color: #4CAF50;
+            padding: 8px 16px;
+            vertical-align: middle;
+            border: none;
+        }
+
     </style>
   </head>
   <body>
     <div id="app">
       <h1>Spin to Lose</h1>
-      <h2>Who?</h2>
-      <ol>
-        <li v-for="person in people">
-          <label>
-            <input type="checkbox" v-model="selectedPeople" :value="person" v-on:change="drawRouletteWheel()">
-            {{person}}
-          </label>
-        </li>
-      </ol>      
-      <roulette-wheel :options="selectedPeople"></roulette-wheel>
+      <div id="container">
+        <div id="who">
+          <h2>Who?</h2>
+          <ol>
+            <li v-for="person in people">
+            <label>
+                <input type="checkbox" v-model="selectedPeople" :value="person" v-on:change="drawRouletteWheel()">
+                {{person}}
+            </label>
+            </li>
+          </ol>  
+        </div>   
+        <div id="roulette-wheel">
+          <roulette-wheel :options="selectedPeople"></roulette-wheel>
+        </div> 
+      </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js" integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
@@ -63,7 +94,7 @@
         computed: {
             arc: function() { return Math.PI / (this.options.length / 2) }
         },
-        template: '<div><canvas width="500" height="500"></canvas><input type="button" value=" SPIN " v-on:click="spin()" /></div>',
+        template: '<div><canvas width="500" height="500"></canvas><input id="spin-button" type="button" value="SPIN" v-on:click="spin()" /></div>',
         watch: {
             options: function(oldVal, newVal){
                 this.drawWheel();
