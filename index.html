@@ -98,7 +98,8 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js" integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
-    <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.4.0/Tween.js" integrity="sha256-npeiXUdkbubcrPHG5ljBo50rVVcWQTtDr0/PhZ8gWOA=" crossorigin="anonymous"></script>
+   <script>
         // var people = ["Dale", "Dan", "Nathan", "Rob", "Russell", "Sam"];
         var people = [
           { name: 'Dale', color: '#7acaff' },
@@ -114,11 +115,13 @@
         data: function() {
             return { 
                 startAngle: 0,
-            spinTimeout: null,
-                    pinArcStart: 10,
-            spinTime: 0,
-            spinTimeTotal: 0,
-                    ctx: null
+                spinTimeout: null,
+                pinArcStart: 10,
+                spinTime: 0,
+                spinTimeTotal: 0,
+                delta: 0,
+                tween: null,
+                ctx: null
             }
         },
         computed: {
@@ -129,6 +132,9 @@
             options: function(oldVal, newVal){
                 this.drawWheel();
             }
+        },
+        created: function(){
+            this.updateLoop();        
         },
         methods: {
             drawWheel: function(){
@@ -147,25 +153,23 @@
                     ctx.font = "bold 14px 'Montserrat', Helvetica" // 'bold 12px Helvetica, Arial';
 
                     for(var i = 0; i < this.options.length; i++) {
-                    var angle = this.startAngle + i * this.arc;
-                    //ctx.fillStyle = colors[i];
-                    
-                    ctx.fillStyle = this.options[i].color; //getColor(i, this.options.length);
+                        var angle = this.startAngle + i * this.arc;
+                        
+                        ctx.fillStyle = this.options[i].color; //getColor(i, this.options.length);
 
-                    ctx.beginPath();
-                    ctx.arc(250, 250, outsideRadius, angle, angle + this.arc, false);
-                    ctx.arc(250, 250, insideRadius, angle + this.arc, angle, true);
-                    ctx.stroke();
-                    ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(250, 250, outsideRadius, angle, angle + this.arc, false);
+                        ctx.arc(250, 250, insideRadius, angle + this.arc, angle, true);
+                        ctx.fill();
 
-                    ctx.save();
-                    ctx.fillStyle = "black";
-                    ctx.translate(250 + Math.cos(angle + this.arc / 2) * textRadius, 
-                                    250 + Math.sin(angle + this.arc / 2) * textRadius);
-                    ctx.rotate(angle + this.arc / 2 + Math.PI / 2);
-                    var text = this.options[i].name;
-                    ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
-                    ctx.restore();
+                        ctx.save();
+                        ctx.fillStyle = "black";
+                        ctx.translate(250 + Math.cos(angle + this.arc / 2) * textRadius, 
+                                        250 + Math.sin(angle + this.arc / 2) * textRadius);
+                        ctx.rotate(angle + this.arc / 2 + Math.PI / 2);
+                        var text = this.options[i].name;
+                        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                        ctx.restore();
                     } 
 
                     //Arrow
@@ -183,29 +187,41 @@
                 }
             },  	
             spin: function() {
-                this.spinAngleStart = Math.random() * 10 + 10;
-                this.spinTime = 0;
-                this.spinTimeTotal = (Math.random() * 3) + 10 * 1000;
-                this.rotateWheel();
-            },
-            rotateWheel: function() {
-                this.spinTime += 30;
-                if(this.spinTime >= this.spinTimeTotal) {
-                    this.stopRotateWheel();
-                    return;
-                }
+                this.spinTimeTotal -= this.spinTime
+                this.spinTimeTotal += (Math.random() * 3) + 1 * 1000;
+                this.delta = (Math.random() * 0.25) + 0.5;
 
-                var spinAngle = this.spinAngleStart - easeOut(this.spinTime, 0, this.spinAngleStart, this.spinTimeTotal);
-                this.startAngle += (spinAngle * Math.PI / 180);
-                this.drawWheel();
+                if(this.tween)
+                    this.tween.stop();
+
+                this.tween = new TWEEN.Tween(this);
+                this.tween.easing(TWEEN.Easing.Circular.Out);
+                this.tween.to({ delta : 0 }, this.spinTimeTotal)
+                            .onUpdate(
+                                function(object) {
+                                    this.startAngle += this.delta;
+                                    this.drawWheel();
+                                }.bind(this))
+                            .onComplete(
+                                function(object) {
+                                    this.stopRotateWheel();
+                                }.bind(this));
+
+                this.tween.start();
+            },
+            updateLoop: function() {
                 var self = this;
 
+                TWEEN.update();                
+
                 this.spinTimeout = setTimeout(function(){
-                    self.rotateWheel();
+                    self.updateLoop();
                 }, 30);
             },
             stopRotateWheel: function() {
                 clearTimeout(this.spinTimeout);
+                this.spinTime = 0;
+                this.spinTimeTotal = 0;
                 var degrees = this.startAngle * 180 / Math.PI + 90;
                 var arcd = this.arc * 180 / Math.PI;
                 var index = Math.floor((360 - degrees % 360) / arcd);
@@ -262,12 +278,6 @@
             blue  = Math.sin(frequency*item+4+phase) * width + center;
             
             return RGB2Color(red,green,blue);
-        }
-
-        function easeOut(t, b, c, d) {
-            var ts = (t/=d)*t;
-            var tc = ts*t;
-            return b+c*(tc + -3*ts + 3*t);
         }
     </script>
   </body>
