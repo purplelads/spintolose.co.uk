@@ -188,7 +188,9 @@
             },  	
             spin: function() {
                 this.spinTimeTotal -= this.spinTime
-                this.spinTimeTotal += (Math.random() * 3) + 1 * 1000;
+                this.spinTimeTotal += (Math.random() * 3) + 2 * 1000;
+                this.spinTimeTotal = Math.min(this.spinTimeTotal, 10000);
+
                 this.delta = (Math.random() * 0.25) + 0.5;
 
                 if(this.tween)
