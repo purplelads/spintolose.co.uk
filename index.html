@@ -120,6 +120,7 @@
                 spinTime: 0,
                 spinTimeTotal: 0,
                 delta: 0,
+                tweens: [TWEEN.Easing.Circular.Out, TWEEN.Easing.Sinusoidal.Out, TWEEN.Easing.Back.Out, TWEEN.Easing.Bounce.Out],
                 tween: null,
                 ctx: null
             }
@@ -189,7 +190,7 @@
             spin: function() {
                 this.spinTimeTotal -= this.spinTime
                 this.spinTimeTotal += (Math.random() * 3) + 2 * 1000;
-                this.spinTimeTotal = Math.min(this.spinTimeTotal, 10000);
+                this.spinTimeTotal = Math.min(this.spinTimeTotal, 10000);           
 
                 this.delta = (Math.random() * 0.25) + 0.5;
 
@@ -197,7 +198,11 @@
                     this.tween.stop();
 
                 this.tween = new TWEEN.Tween(this);
-                this.tween.easing(TWEEN.Easing.Circular.Out);
+
+                var index =  Math.floor(Math.random() * (this.tweens.length));
+                var tweenFunction = this.tweens[index];
+
+                this.tween.easing(tweenFunction);
                 this.tween.to({ delta : 0 }, this.spinTimeTotal)
                             .onUpdate(
                                 function(object) {
