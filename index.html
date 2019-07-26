@@ -106,11 +106,11 @@
         {
             flash = flash + 1;
             if (flash == 1) { document.getElementById('app').style.backgroundColor = 'red'; document.getElementById('header').style.color = "green"; setTimeout("lightning()", 100); }
-        if(flash==2){document.getElementById('app').style.backgroundColor='blue'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white";}
-        if(flash==3){document.getElementById('app').style.backgroundColor='purple'; setTimeout("lightning()",100); document.getElementById('header').style.color = "yellow";}
-        if(flash==4){document.getElementById('app').style.backgroundColor='orange'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white";}
-        if(flash==5){document.getElementById('app').style.backgroundColor='yellow'; setTimeout("lightning()",100); document.getElementById('header').style.color = "cyan";}
-        if(flash==6){document.getElementById('app').style.backgroundColor='green'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white";}
+        if(flash==2){document.getElementById('app').style.backgroundColor='blue'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; ; document.getElementById('spin-button').style.backgroundColor = "blue";}
+        if(flash==3){document.getElementById('app').style.backgroundColor='purple'; setTimeout("lightning()",100); document.getElementById('header').style.color = "yellow"; document.getElementById('spin-button').style.backgroundColor = "yellow";}
+        if(flash==4){document.getElementById('app').style.backgroundColor='orange'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; ; document.getElementById('spin-button').style.backgroundColor = "red";}
+        if(flash==5){document.getElementById('app').style.backgroundColor='yellow'; setTimeout("lightning()",100); document.getElementById('header').style.color = "cyan"; ; document.getElementById('spin-button').style.backgroundColor = "cyan";}
+        if(flash==6){document.getElementById('app').style.backgroundColor='green'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; ; document.getElementById('spin-button').style.backgroundColor = "pink";}
         if(flash==7){flash=0; document.getElementById('app').style.backgroundColor='cyan'; document.getElementById('header').style.color = "red"; setTimeout("lightning()",100);}
         }
         setTimeout("lightning()",1);
