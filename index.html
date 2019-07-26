@@ -13,7 +13,7 @@
 
         #app {
             margin: auto;
-            background: rgba(255, 255, 255, 0.9);
+            /*background: rgba(255, 255, 255, 0.9);*/
             opacity: 50%;
             border-radius: 4px;
             padding: 20px 20px 20px 40px;
@@ -74,29 +74,41 @@
           background-color: rgb(118, 64, 143);
         }
 
+        #colour-overlay{
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            z-index: 1000000;
+        }
+
     </style>
   </head>
   <body>
-    <div id="app">
-      <marquee behavior="scroll" scrollamount="50"><h1 id="header">Spin to Lose</h1></marquee>
-      <div id="container">
-        <div id="who">
-          <h2>Who?</h2>
-          <ol>
-            <li v-for="person in people">
-            <label>
-                <input type="checkbox" v-model="selectedPeople" :value="person" v-on:change="drawRouletteWheel()">
-                <span class="colour-block" v-bind:style="{'background-color': person.color}"></span>
-                {{person.name}}
-            </label>
-            </li>
-          </ol>  
-        </div>   
-        <div id="roulette-wheel">
-          <roulette-wheel :options="selectedPeople"></roulette-wheel>
-        </div> 
+      <div id="colour-overlay">
+          <div id="app">
+              <marquee behavior="scroll" scrollamount="50"><h1 id="header">Spin to Lose</h1></marquee>
+              <div id="container">
+                  <div id="who">
+                      <h2>Who?</h2>
+                      <ol>
+                          <li v-for="person in people">
+                              <label>
+                                  <input type="checkbox" v-model="selectedPeople" :value="person" v-on:change="drawRouletteWheel()">
+                                  <span class="colour-block" v-bind:style="{'background-color': person.color}"></span>
+                                  {{person.name}}
+                              </label>
+                          </li>
+                      </ol>
+                  </div>
+                  <div id="roulette-wheel">
+                      <roulette-wheel :options="selectedPeople"></roulette-wheel>
+                  </div>
+              </div>
+          </div>
       </div>
-    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js" integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.4.0/Tween.js" integrity="sha256-npeiXUdkbubcrPHG5ljBo50rVVcWQTtDr0/PhZ8gWOA=" crossorigin="anonymous"></script>
@@ -106,13 +118,13 @@
         function lightning()
         {
             flash = flash + 1;
-            if (flash == 1) { document.getElementById('app').style.backgroundColor = 'red'; document.getElementById('header').style.color = "green"; setTimeout("lightning()", 100); }
-        if(flash==2){document.getElementById('app').style.backgroundColor='blue'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; ; document.getElementById('spin-button').style.backgroundColor = "blue";}
-        if(flash==3){document.getElementById('app').style.backgroundColor='purple'; setTimeout("lightning()",100); document.getElementById('header').style.color = "yellow"; document.getElementById('spin-button').style.backgroundColor = "yellow";}
-        if(flash==4){document.getElementById('app').style.backgroundColor='orange'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; ; document.getElementById('spin-button').style.backgroundColor = "red";}
-        if(flash==5){document.getElementById('app').style.backgroundColor='yellow'; setTimeout("lightning()",100); document.getElementById('header').style.color = "cyan"; ; document.getElementById('spin-button').style.backgroundColor = "cyan";}
-        if(flash==6){document.getElementById('app').style.backgroundColor='green'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; ; document.getElementById('spin-button').style.backgroundColor = "pink";}
-        if(flash==7){flash=0; document.getElementById('app').style.backgroundColor='cyan'; document.getElementById('header').style.color = "red"; setTimeout("lightning()",100);}
+            if (flash == 1) { document.getElementById('colour-overlay').style.backgroundColor = 'rgba(255, 0, 0, 0.5)'; document.getElementById('header').style.color = "green"; setTimeout("lightning()", 100); document.getElementById('spin-button').style.backgroundColor = "blue";}
+        if(flash==2){document.getElementById('colour-overlay').style.backgroundColor='rgba(0, 0, 255, 0.5)'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; document.getElementById('spin-button').style.backgroundColor = "yellow";}
+        if(flash==3){document.getElementById('colour-overlay').style.backgroundColor='rgba(128, 0, 128, 0.5)'; setTimeout("lightning()",100); document.getElementById('header').style.color = "yellow"; document.getElementById('spin-button').style.backgroundColor = "red";}
+        if(flash==4){document.getElementById('colour-overlay').style.backgroundColor='rgba(255, 165, 0, 0.5)'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; document.getElementById('spin-button').style.backgroundColor = "cyan";}
+        if(flash==5){document.getElementById('colour-overlay').style.backgroundColor='rgba(255, 255, 0, 0.5)'; setTimeout("lightning()",100); document.getElementById('header').style.color = "cyan"; document.getElementById('spin-button').style.backgroundColor = "pink";}
+        if(flash==6){document.getElementById('colour-overlay').style.backgroundColor='rgba(0, 128, 0, 0.5)'; setTimeout("lightning()",100); document.getElementById('header').style.color = "white"; document.getElementById('spin-button').style.backgroundColor = "green";}
+        if(flash==7){flash=0; document.getElementById('colour-overlay').style.backgroundColor='rgba(0, 255, 255, 0.5)'; document.getElementById('header').style.color = "red"; setTimeout("lightning()",100); document.getElementById('spin-button').style.backgroundColor = "purple";}
         }
         setTimeout("lightning()",1);
 
