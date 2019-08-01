@@ -32,6 +32,7 @@
         h2 {
             font-weight: bold;
             margin-bottom: 15px;
+            display: inline;
         }
 
         del {
@@ -57,7 +58,7 @@
             display: inline-block;
         }
 
-        #spin-button {
+        .button {
             color: #FFFFFF;
             background-color: rgb(144, 76, 175);
             padding: 8px 16px;
@@ -68,19 +69,29 @@
             font-size: 14px;
         }
 
-        #spin-button:hover {
+        .button:hover {
           cursor: pointer;
           background-color: rgb(118, 64, 143);
         }
 
+        .pull {
+          float:right;
+        }
+        [v-cloak] { display: none;}
+
     </style>
   </head>
   <body>
-    <div id="app">
-      <h1>Spin to Lose</h1>
+    <div v-cloak id="app">
+      <h1>{{title}}
+          <button class="button pull" v-on:click="toggleLanguage">
+              <span v-if="currentLanguage === 'en'">{{cy}}</span>
+              <span v-else >{{en}}</span>
+            </button>
+      </h1>
       <div id="container">
         <div id="who">
-          <h2>Who?</h2>
+          <h2>{{who}}?</h2>
           <ol>
             <li v-for="person in people">
             <label>
@@ -92,7 +103,7 @@
           </ol>  
         </div>   
         <div id="roulette-wheel">
-          <roulette-wheel :options="selectedPeople"></roulette-wheel>
+          <roulette-wheel :options="selectedPeople" :lang="currentLanguage"></roulette-wheel>
         </div> 
       </div>
     </div>
@@ -111,7 +122,7 @@
         ];
         
         Vue.component('rouletteWheel', {
-            props: ["options"],
+            props: ["options", "lang"],
         data: function() {
             return { 
                 startAngle: 0,
@@ -122,22 +133,27 @@
                 delta: 0,
                 tweens: [TWEEN.Easing.Circular.Out, TWEEN.Easing.Sinusoidal.Out, TWEEN.Easing.Back.Out, TWEEN.Easing.Bounce.Out],
                 tween: null,
-                ctx: null
+                ctx: null,
+                spinTxt: 'Spin'
             }
         },
         computed: {
             arc: function() { return Math.PI / (this.options.length / 2) }
         },
-        template: '<div><canvas width="500" height="500"></canvas><input id="spin-button" type="button" value="Spin" v-on:click="spin()" /></div>',
+        template: '<div><canvas width="500" height="500"></canvas><input id="spin-button" class="button" type="button" :value="spinTxt" v-on:click="spin()" /></div>',
         watch: {
             options: function(oldVal, newVal){
                 this.drawWheel();
+            },
+            lang: function() {
+              this.lang === 'cy' ? this.spinTxt = 'Troelli' : this.spinTxt = 'Spin';
             }
         },
         created: function(){
             this.updateLoop();        
         },
         methods: {
+            
             drawWheel: function(){
                 var canvas = this.$el.getElementsByTagName('canvas')[0];
                 if (canvas.getContext) {
@@ -249,7 +265,13 @@
             el: "#app",
             data: {
                 people: people,
-                selectedPeople: people
+                selectedPeople: people,
+                currentLanguage: 'en',
+                title: 'Spin to Lose',
+                who: 'Who',
+                spin: 'Spin',
+                en: 'English',
+                cy: 'Cymraeg'
             },
             methods: {
                 spinWheel: function(){
@@ -257,7 +279,20 @@
                 },
                 drawRouletteWheel: function(){
                 
-                }
+                },
+                toggleLanguage: function() {
+                  if (this.currentLanguage === 'cy') {
+                    this.title = 'Spin to Lose';
+                    this.who = 'Who'
+                    this.spin = 'Spin',
+                    this.currentLanguage = 'en'
+                  } else {
+                    this.title = 'Troelli i golli';
+                    this.who = 'Pwy'
+                    this.spin = 'Troelli',
+                    this.currentLanguage = 'cy'
+                  }
+                 },
             },
             mounted: function(){
                 //drawRouletteWheelInt();
